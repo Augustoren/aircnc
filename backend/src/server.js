@@ -1,17 +1,19 @@
 const express = require("express");
 const routes = require("./routes");
 const mongoose = require("mongoose");
-
+const config = require("config");
 const app = express();
 
+if (!config.get("DBKEY")) {
+  console.error("FATAL ERROR: MongoDB access key is not defined.");
+  process.exit(1);
+}
+
 mongoose
-  .connect(
-    "mongodb+srv://augusto:augusto@dev.otpbi.mongodb.net/aircnc?retryWrites=true&w=majority",
-    {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    }
-  )
+  .connect(config.get("DBKEY"), {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
   .then(() => {
     console.log("[OK] -> Database connected.");
   })
